@@ -1,25 +1,27 @@
 """
-MySQS
+SQS-Task
+
+It's a message queue for job execution using AWS SQS
 
 """
 
-import os
 from setuptools import setup, find_packages
 
 setup(
-    name="mysqs",
-    version="0.0.1",
+    name="sqs-task",
+    version="0.1.0",
     license="MIT",
     author="Mardix",
     author_email="mardix@pylot.io",
     description="",
-    url="",
+    url="https://github.com/mardix/sqs-task",
     long_description=__doc__,
-    py_modules=['mysqs'],
+    py_modules=['sqs_task'],
     include_package_data=True,
     packages=find_packages(exclude=["*.tests", "*.tests.*", "tests.*", "tests"]),
     install_requires=[
-        "boto"
+        "boto",
+        "python-slugify"
     ],
     keywords=['aws'],
     platforms='any',
