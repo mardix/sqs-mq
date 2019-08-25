@@ -153,6 +153,7 @@ setup(
     description="",
     url="https://github.com/mardix/sqs-mq",
     long_description=__doc__,
+    long_description_content_type="text/markdown",
     py_modules=['sqs_mq'],
     include_package_data=True,
     packages=find_packages(
