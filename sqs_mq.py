@@ -1,74 +1,5 @@
 """
-SQS-Task
-
-It's a message queue for job execution using AWS SQS
-
-It put data in 2 queues:
-    - QUEUED
-    - COMPLETED
-    - FAILED
-
-QUEUED: messages contain runnable messages, ie: function to run for task
-
-COMPLETED: contains completed data
-
-FAILED: will contained the finished results which will contain completed
-            or failed data
-
-
-You can prioritize the QUEUED by putting messages in different pool.
-ie: you may want to have a fast pool, slow pool, or pool with numbers
-when fetching the data, you can specify where to get it exactly
-
-
-
-- Example
-
-task_q = TaskQ("myQname", "***", "***")
-
-- To add a task (job). you can add as many task as you want. it will be named: `myQname-QUEUED`
-task_q.add(my_function_name, *args, **args)
-
-- To add a task in a different pool. it will be named: `myQname-QUEUED-FAST`
-task_q.add(my_fn, pool='FAST')
-
-- To add a delay
-task_q.add(my_fn, delay=45)
-
-## Run the tasks
-
-- will run only the QUEUED ones
-task_q.run()
-
-- To run a pool,
-task_q.run(pool='FAST')
-
-
-# COMPLETED and FAILED
-
-There are two new queues: COMPLETED, FAILED
-
-- run COMPLETED
-
-def completed_callback(body):
-    # body is a dict
-    data = ...
-
-task_q.run_completed(callback=completed_callback)
-
-
-- run FAILED
-
-def failed_callback(body):
-    # body is a dict
-    data = ...
-
-task_q.run_failed(callback=failed_callback)
-
-
-
-*** Once captured, it will delete the message from the queue
-
+# SQS-MQ
 """
 
 import datetime
@@ -92,7 +23,7 @@ def queued_name(name=None):
     return "%s-%s" % (QUEUE_QUEUED, to_slug(name).upper()) if name else QUEUE_QUEUED
 
 
-class TaskQ(object):
+class SQSMQ(object):
     _pool = {}
 
     def __init__(self,
@@ -146,7 +77,7 @@ class TaskQ(object):
                                     'callback': callback,
                                     'args': args,
                                     'kwargs': kwargs
-                                })
+        })
         return m.id
 
     def queue(self, key):
@@ -218,7 +149,6 @@ class TaskQ(object):
             time.sleep(pause)
 
     def run(self, pool=None, size=5, delay=5, once=False, wait_time=20, write_failed=True):
-
         """
         Run the QUEUED worker. If pool is provided, it will use
         :param pool: The name of the pool to get
@@ -316,18 +246,3 @@ class TaskQ(object):
         """
         for k, q in self._pool.items():
             q.purge()
-
-    def task(self, pool=None, delay=None):
-        """
-        A decorator to `add` function to the queue
-        :param pool: The pool to use
-        :delay pool: Time to wait for this
-        :return:
-        """
-
-        def deco(fn):
-            @functools.wraps(fn)
-            def rator(*args, **kwargs):
-                self.add(fn, pool=pool, delay=delay, *args, **kwargs)
-            return rator
-        return deco
