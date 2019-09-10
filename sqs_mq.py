@@ -27,7 +27,7 @@ class SQSMQ(object):
     _pool = {}
 
     def __init__(self,
-                 name,
+                 name=None,
                  aws_access_key_id=None,
                  aws_secret_access_key=None,
                  region='us-east-1',
@@ -41,12 +41,23 @@ class SQSMQ(object):
         :param visibility_timeout: The default visibility timeout for all messages written in the queue. This can be overridden on a per-message.
         :return:
         """
-        self.name = to_slug(name)
-        self.visibility_timeout = visibility_timeout
-
+        self.set_name(name)
+        self.set_visibility_timeout(visibility_timeout)
         self.connect(region=region,
-                     aws_access_key_id=aws_access_key_id,
-                     aws_secret_access_key=aws_secret_access_key)
+                    aws_access_key_id=aws_access_key_id,
+                    aws_secret_access_key=aws_secret_access_key)
+
+    def set_name(self, name):
+        """
+        Set the queue name
+        """
+        self.name = to_slug(name)
+
+    def set_visibility_timeout(self, visibility_timeout):
+        """
+        Set the visibility timeout
+        """
+        self.visibility_timeout = visibility_timeout
 
     def connect(self, region='us-east-1', aws_access_key_id=None,
                 aws_secret_access_key=None):
