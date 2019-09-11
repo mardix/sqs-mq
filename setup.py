@@ -9,7 +9,7 @@ with open("README.md", "r") as f:
 
 setup(
     name="sqs-mq",
-    version="0.2.0",
+    version="0.2.1",
     license="MIT",
     author="Mardix",
     author_email="mcx2082@gmail.com",

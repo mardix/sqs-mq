@@ -51,13 +51,15 @@ class SQSMQ(object):
         """
         Set the queue name
         """
-        self.name = to_slug(name)
+        if name:
+            self.name = to_slug(name)
 
     def set_visibility_timeout(self, visibility_timeout):
         """
         Set the visibility timeout
         """
-        self.visibility_timeout = visibility_timeout
+        if visibility_timeout:
+            self.visibility_timeout = visibility_timeout
 
     def connect(self, region='us-east-1', aws_access_key_id=None,
                 aws_secret_access_key=None):
